@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: group-manager-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: group-manager-api
+  template:
+    metadata:
+      labels:
+        app: group-manager-api
+    spec:
+      containers:
+      - name: group-manager-api
+        image: gonzalomelov17/group-manager-api:latest
+        ports:
+        - containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        env:
+        - name: OPEN_AI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api-secrets
+              key: OPEN_AI_API_KEY
+        - name: STACK_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api-secrets
+              key: STACK_API_KEY
+        - name: MSG_LOG
+          value: "true"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
