@@ -11,7 +11,7 @@ const kc = new KubeConfig();
 kc.loadFromDefault();
 const k8sApi = kc.makeApiClient(CoreV1Api);
 
-app.post("/create-group-chat", async (req, res) => {
+app.post("/group-chats", async (req, res) => {
   try {
     const podManifest = {
       apiVersion: "v1",
@@ -39,6 +39,7 @@ app.post("/create-group-chat", async (req, res) => {
     res.json({
       message: "Group chat instance created",
       podName: body.metadata.name,
+      botAddress: "0x0D79E8F6A3F81420DDbFfaDAc4CD651335777a9D",
     });
   } catch (error) {
     console.error("Error creating group chat instance:", error.message);
